@@ -14,12 +14,18 @@ initial_root = Bisection.bisection(f, interval, 0.1)
 """find a better approximation using Newton-Raphson:"""
 root = NewtonRaphsonSecant.newton_raphson_secant(f, initial_root, epsilon)
 
-evaluation = True in [abs(r - root) <= epsilon for r in true_roots]
+evaluation1 = True in [abs(r - root) <= epsilon for r in true_roots]
 
 print(f"The true roots of the function are:")
 for r in true_roots:
     print(r)
-print(f"The calculated root is {root} \nIs it within the allowed error? {evaluation}")
+print(f"The root calculated using bisection and newton-raphson is {root} \nIs it within the allowed error? {evaluation1}")
 
 
-root2 = SyntheticDivision.synthetic_division(polynomial, initial_root, epsilon)
+roots = SyntheticDivision.all_roots(polynomial, initial_root, epsilon)
+roots.sort()
+evaluation2 = all([abs(true - root) <= epsilon for true, root in zip(true_roots, roots)])
+print("The roots calculated using synthetic division are:")
+for root in roots:
+    print(root)
+print(f"are they within the allowed error? {evaluation2}")
