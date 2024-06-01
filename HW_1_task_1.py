@@ -1,3 +1,8 @@
+"""
+written by dari sarfaty :)
+"""
+
+
 import Bisection
 import NewtonRaphsonSecant
 import SyntheticDivision
@@ -13,7 +18,7 @@ f = PolynomialToFunction.polynomial_to_function(polynomial)
 initial_root = Bisection.bisection(f, interval, 0.1)
 """find a better approximation using Newton-Raphson:"""
 root = NewtonRaphsonSecant.newton_raphson_secant(f, initial_root, epsilon)
-
+"""is the root withing error range?"""
 evaluation1 = True in [abs(r - root) <= epsilon for r in true_roots]
 
 print(f"The true roots of the function are:")
@@ -21,10 +26,12 @@ for r in true_roots:
     print(r)
 print(f"The root calculated using bisection and newton-raphson is {root} \nIs it within the allowed error? {evaluation1}")
 
-
+"""find all roots using synthetic division and reduction"""
 roots = SyntheticDivision.all_roots(polynomial, initial_root, epsilon)
 roots.sort()
+"""are they within error range?"""
 evaluation2 = all([abs(true - root) <= epsilon for true, root in zip(true_roots, roots)])
+
 print("The roots calculated using synthetic division are:")
 for root in roots:
     print(root)
