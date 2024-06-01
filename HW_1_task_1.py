@@ -15,5 +15,5 @@ root1 = NewtonRaphsonSecant.newton_raphson_secant(f, initial_root, epsilon)
 root2 = SyntheticDivision.synthetic_division(polynomial, initial_root, epsilon)
 
 print(initial_root, root1, root2)
-
+"""is this on git now?"""
 
