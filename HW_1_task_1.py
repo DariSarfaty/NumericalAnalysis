@@ -5,7 +5,7 @@ import PolynomialToFunction
 
 polynomial = [3,0,-7,2,1]
 interval = [-5, 3]
-epsilon = 0.0001
+epsilon = 0.0003
 f = PolynomialToFunction.polynomial_to_function(polynomial)
 
 """find initial guess using bisection:"""
