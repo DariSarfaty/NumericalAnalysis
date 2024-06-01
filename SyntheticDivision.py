@@ -13,7 +13,7 @@ def synthetic_division(polynomial, x1, epsilon):
 
 
 def division(polynomial, x0):
-    """I don't actually know how to describe what this does mathematically"""
+    """divides the polynomial by (x-x0)"""
     a = [0]
     for i in range(len(polynomial) - 1):
         a.append(polynomial[-(i + 1)] + a[i] * x0)
@@ -21,3 +21,13 @@ def division(polynomial, x0):
     a.reverse()
     return a
 
+def all_roots(polynomial, x1, epsilon):
+    """finds all roots of a polynomial using synthetic division and reduction of the order,
+     the final root (of a linear equation) is found analytically"""
+    roots = []
+    while len(polynomial) > 2:
+        root = synthetic_division(polynomial, x1, epsilon)
+        roots.append(root)
+        polynomial = division(polynomial, root)
+    roots.append(-polynomial[0]/polynomial[1])
+    return roots
