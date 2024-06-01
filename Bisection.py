@@ -4,6 +4,7 @@ def bisection(function, interval, epsilon):
         1. given an interval with only one root, it will be returned
         2. given an interval with an odd number of roots, one will be returned
         3. at any other situation the function may not be able to find a root"""
+    
     a = interval[0]
     b = interval[1]
     u = function(a)
