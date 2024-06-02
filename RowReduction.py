@@ -1,6 +1,6 @@
 
 def reduction(matrix):
-    """ takes a nXn+1 matrix and solves it"""
+    """ takes a nXn+1 matrix and returns the solutions in order"""
     (rows, cols) = (len(matrix), len(matrix[0]))
     """reduce down:"""
     for pivot in range(rows):
@@ -15,5 +15,5 @@ def reduction(matrix):
         for row in range(pivot - 1, -1, -1):
             c = matrix[row][pivot]
             matrix[row] = [elem - piv * c for elem, piv in zip(matrix[row], matrix[pivot])]
-    return matrix
+    return [r[-1] for r in matrix]
 
