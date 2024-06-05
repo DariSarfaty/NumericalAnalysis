@@ -23,8 +23,8 @@ def g(coor):
     return 169 * x * x + 3 * y * y - 111 * x - 10 * y
 
 
-print(Tools.newton(f, g, [-0.01, -0.01], 0.00000001))
-
+print(f"found the following solution: {Tools.newton(f, g, [-0.01, -0.01], 0.00000001)}")
+"""for some reason epsilon isn't factored in well"""
 
 
 

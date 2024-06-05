@@ -146,5 +146,3 @@ def newton(f, g, coor0, epsilon):
         last = cur
         cur = [last[i] - tag[i] for i in range(2)]
     return cur
-
-
