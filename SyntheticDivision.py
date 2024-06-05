@@ -21,6 +21,7 @@ def division(polynomial, x0):
     a.reverse()
     return a
 
+
 def all_roots(polynomial, x1, epsilon):
     """finds all roots of a polynomial using synthetic division and reduction of the order,
      the final root (of a linear equation) is found analytically"""

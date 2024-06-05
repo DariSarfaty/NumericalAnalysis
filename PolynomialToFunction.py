@@ -1,8 +1,9 @@
-"""disclaimer: I used chatGPT for this function only as I was not sure this was possible in python"""
+
 
 
 def polynomial_to_function(polynomial):
     """
+    disclaimer: I used chatGPT for this function only as I was not sure this was possible in python
     Generate a polynomial function based on the given coefficients.
 
     Arguments:
