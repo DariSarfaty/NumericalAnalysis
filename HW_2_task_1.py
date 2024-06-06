@@ -15,4 +15,5 @@ B = np.array([[1, 3, 2],
 
 
 print(Tools.row_reduction(A, c))
-print(Tools.crout(B))
+print(Tools.LU_decomposition(A, c))
+

@@ -131,7 +131,9 @@ def newton(f, g, coor0, epsilon):
     return cur
 
 
+
 def row_reduction(A, c):
+    # add pivoting!!!
     """ takes a nXn matrix and a vector c and returns the solutions in order"""
     matrix = np.append(A, c, axis=1)
     (rows, cols) = np.shape(matrix)
@@ -172,3 +174,30 @@ def crout(A):
                 L[row, col] = (A[row, col] - s) / U[col, col]
     return L, U
 
+
+def down(L, c):
+    y = []
+    for i in range(len(c)):
+        s = 0
+        for j in range(i):
+            s += L[i, j] * y[j]
+        y.append((c[i] - s) / L[i, i])
+    return y
+
+
+def up(U, y):
+    x = np.zeros(len(y), dtype=float)
+    n = len(y)
+    for i in range(n -1, -1, -1):
+        s = 0
+        for j in range(i+1, n):
+            s += U[i, j] * x[j]
+        x[i] = (y[i] - s) / U[i, i]
+    return x
+
+
+def LU_decomposition(A, c):
+    L, U = crout(A)
+    y = down(L, c)
+    x = up(U, y)
+    return x
