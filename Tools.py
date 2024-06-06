@@ -129,20 +129,52 @@ def partial_derivative(f, coordinates0, coordinates1, n):
 
 
 def newton(f, g, coor0, epsilon):
-    """the newton method for 2 functions simultaneously,
-    for some reason epsilon turns out orders of magnitude larger than the input """
-    cur = [epsilon*2 + x for x in coor0]
+    """the newton method for 2 functions simultaneously"""
+    cur = [epsilon*1000 + x for x in coor0]
     last = coor0
-    while all([abs(x0 - x1) >= epsilon for x0, x1 in zip(last, cur)]):
+    while abs((cur[0]**2 + cur[1]**2) - (last[0]**2 + last[1]**2) ) >= epsilon:
         delta = [epsilon + x for x in last]
-        flast = f(last)
-        glast = g(last)
-        fx = partial_derivative(f, last, delta, 0)
-        fy = partial_derivative(f, last, delta, 1)
-        gx = partial_derivative(g, last, delta, 0)
-        gy = partial_derivative(f, last, delta, 1)
+        flast = f(cur)
+        glast = g(cur)
+        fx = partial_derivative(f, cur, delta, 0)
+        fy = partial_derivative(f, cur, delta, 1)
+        gx = partial_derivative(g, cur, delta, 0)
+        gy = partial_derivative(f, cur, delta, 1)
         denom = (fx*gy) - (gx*fy)
         tag = [((flast*gy)-(glast*fy))/denom, ((glast*fx)-(flast*gx))/denom]
         last = cur
-        cur = [last[i] - tag[i] for i in range(2)]
+        cur = [cur[i] - tag[i] for i in range(2)]
     return cur
+
+def f(coor):
+    x = coor[0]
+    y = coor[1]
+    return 4 * y * y + 4 * y - 52 * x - 19
+
+def fy(coor):
+    x = coor[0]
+    y = coor[1]
+    return 8  * y + 4
+
+def fx(coor):
+    x = coor[0]
+    y = coor[1]
+    return - 52
+
+def g(coor):
+    x = coor[0]
+    y = coor[1]
+    return 169 * x * x + 3 * y * y - 111 * x - 10 * y
+
+def gy(coor):
+    x = coor[0]
+    y = coor[1]
+    return 6 * y - 10
+
+def gx(coor):
+    x = coor[0]
+    y = coor[1]
+    return 169 * 2 * x - 111
+
+if __name__ == "__main__":
+    print(newton(f, g, [-0.01, -0.01], 0.00000001))

@@ -16,11 +16,32 @@ def f(coor):
     y = coor[1]
     return 4 * y * y + 4 * y - 52 * x - 19
 
+def fy(coor):
+    x = coor[0]
+    y = coor[1]
+    return 8  * y + 4
+
+def fx(coor):
+    x = coor[0]
+    y = coor[1]
+    return - 52
 
 def g(coor):
     x = coor[0]
     y = coor[1]
     return 169 * x * x + 3 * y * y - 111 * x - 10 * y
+
+def gy(coor):
+    x = coor[0]
+    y = coor[1]
+    return 6 * y - 10
+
+def gx(coor):
+    x = coor[0]
+    y = coor[1]
+    return 169 * 2 * x - 111
+
+
 
 
 print(f"found the following solution: {Tools.newton(f, g, [-0.01, -0.01], 0.00000001)}")
