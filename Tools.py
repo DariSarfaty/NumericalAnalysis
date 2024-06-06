@@ -1,3 +1,6 @@
+import numpy as np
+
+
 def bisection(function, interval, epsilon):
     """finds a root of a function under these conditions:
         0. a root that is also an extrema does not count and cannot be found
@@ -103,25 +106,6 @@ def polynomial_to_function(polynomial):
     return function
 
 
-def row_reduction(matrix):
-    """ takes a nXn+1 matrix and returns the solutions in order"""
-    (rows, cols) = (len(matrix), len(matrix[0]))
-    """reduce down:"""
-    for pivot in range(rows):
-        a = matrix[pivot][pivot]
-        copy = matrix[pivot].copy()
-        matrix[pivot] = [x/a for x in copy]
-        for row in range(pivot + 1, rows):
-            b = matrix[row][pivot]
-            matrix[row] = [elem - piv*b for elem, piv in zip(matrix[row], matrix[pivot])]
-    """reduce up:"""
-    for pivot in range(rows - 1, -1, -1):
-        for row in range(pivot - 1, -1, -1):
-            c = matrix[row][pivot]
-            matrix[row] = [elem - piv * c for elem, piv in zip(matrix[row], matrix[pivot])]
-    return [r[-1] for r in matrix]
-
-
 def partial_derivative(f, coordinates0, coordinates1, n):
     copy = coordinates0.copy()
     copy[n] = coordinates1[n]
@@ -132,7 +116,7 @@ def newton(f, g, coor0, epsilon):
     """the newton method for 2 functions simultaneously"""
     cur = [epsilon*1000 + x for x in coor0]
     last = coor0
-    while abs((cur[0]**2 + cur[1]**2) - (last[0]**2 + last[1]**2) ) >= epsilon:
+    while abs((cur[0]**2 + cur[1]**2) - (last[0]**2 + last[1]**2)) >= epsilon:
         delta = [epsilon + x for x in last]
         flast = f(cur)
         glast = g(cur)
@@ -145,4 +129,46 @@ def newton(f, g, coor0, epsilon):
         last = cur
         cur = [cur[i] - tag[i] for i in range(2)]
     return cur
+
+
+def row_reduction(A, c):
+    """ takes a nXn matrix and a vector c and returns the solutions in order"""
+    matrix = np.append(A, c, axis=1)
+    (rows, cols) = np.shape(matrix)
+    """reduce down:"""
+    for pivot in range(rows):
+        a = matrix[pivot, pivot]
+        copy = matrix[pivot].copy()
+        matrix[pivot] = [x/a for x in copy]
+        for row in range(pivot + 1, rows):
+            b = matrix[row, pivot]
+            matrix[row] = [elem - piv * b for elem, piv in zip(matrix[row], matrix[pivot])]
+    """reduce up:"""
+    for pivot in range(rows - 1, -1, -1):
+        for row in range(pivot - 1, -1, -1):
+            d = matrix[row, pivot]
+            matrix[row] = [elem - piv * d for elem, piv in zip(matrix[row], matrix[pivot])]
+    return [r[-1] for r in matrix]
+
+
+def crout(A):
+    n, m = np.shape(A)
+    if n != m:
+        return "your matrix is not square!"
+    L = np.zeros((n, n), dtype=float)
+    U = np.zeros((n, n), dtype=float)
+    for i in range(n):
+        L[i, i] = 1.0
+    for col in range(n):
+        for row in range(n):
+            s = 0.0
+            if row <= col:
+                for k in range(0, row):
+                    s += L[row, k] * U[k, col]
+                U[row, col] = A[row, col] - s
+            else:
+                for k in range(0, col):
+                    s += L[row, k] * U[k, col]
+                L[row, col] = (A[row, col] - s) / U[col, col]
+    return L, U
 
