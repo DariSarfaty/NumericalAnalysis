@@ -31,8 +31,8 @@ ax.set_zlabel('time. \n y = LU decomposition\n b = jacobi\n r = row reduction\n 
 
 
 """test LU decomposition:"""
-ntests = 20
-mtests = 30
+ntests = 50
+mtests = 100
 elaps = np.zeros((ntests,mtests))
 for n in range(2, ntests):
     print(n)
@@ -57,7 +57,7 @@ X, Y = np.meshgrid(X, Y)
 Z = elaps[X, Y]
 
 # Plot the surface.
-"""surf = ("""
+
 ax.plot_surface(X, Y, Z, color="y")
 
 # Customize the z axis.
@@ -65,9 +65,6 @@ ax.zaxis.set_major_locator(LinearLocator(10))
 # A StrMethodFormatter is used automatically
 ax.zaxis.set_major_formatter('{x:.02f}')
 # Add a color bar which maps values to colors.
-"""fig.colorbar(surf, shrink=0.5, aspect=5)"""
-
-"""plt.show()"""
 
 
 
@@ -101,7 +98,7 @@ X, Y = np.meshgrid(X, Y)
 Z = elaps[X, Y]
 
 # Plot the surface.
-"""surf = ("""
+
 ax.plot_surface(X, Y, Z, color="b")
 
 # Customize the z axis.
@@ -109,9 +106,7 @@ ax.zaxis.set_major_locator(LinearLocator(10))
 # A StrMethodFormatter is used automatically
 ax.zaxis.set_major_formatter('{x:.02f}')
 # Add a color bar which maps values to colors.
-"""fig.colorbar(surf, shrink=0.5, aspect=5)"""
 
-"""plt.show()"""
 
 
 """test gauss-seidel:"""
@@ -142,7 +137,7 @@ X, Y = np.meshgrid(X, Y)
 Z = elaps[X, Y]
 
 # Plot the surface.
-"""surf = ("""
+
 ax.plot_surface(X, Y, Z, color="g")
 
 # Customize the z axis.
@@ -150,15 +145,13 @@ ax.zaxis.set_major_locator(LinearLocator(10))
 # A StrMethodFormatter is used automatically
 ax.zaxis.set_major_formatter('{x:.02f}')
 # Add a color bar which maps values to colors.
-"""fig.colorbar(surf, shrink=0.5, aspect=5)"""
 
-"""plt.show()"""
 
 
 
 """test row reduction:"""
-ntests = 20
-mtests = 30
+ntests = 50
+mtests = 100
 elaps = np.zeros((ntests,mtests))
 for n in range(2, ntests):
     print(n)
@@ -184,7 +177,7 @@ X, Y = np.meshgrid(X, Y)
 Z = elaps[X, Y]
 
 # Plot the surface.
-"""surf = ("""
+
 ax.plot_surface(X, Y, Z, color="r")
 
 # Customize the z axis.
@@ -192,18 +185,6 @@ ax.zaxis.set_major_locator(LinearLocator(10))
 # A StrMethodFormatter is used automatically
 ax.zaxis.set_major_formatter('{x:.02f}')
 # Add a color bar which maps values to colors.
-"""fig.colorbar(surf, shrink=0.5, aspect=5)"""
+
 
 plt.show()
-
-
-
-
-
-
-
-"""print(Tools.row_reduction(A, c))
-print(Tools.LU_decomposition(A, [c]))
-print(Tools.jacobi(A, c, 0.00000001, 100))
-print(Tools.gauss_seidel(A, c, 0.00000001, 100))
-"""
