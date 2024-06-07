@@ -16,4 +16,5 @@ B = np.array([[1, 3, 2],
 
 print(Tools.row_reduction(A, c))
 print(Tools.LU_decomposition(A, c))
+print(Tools.gauss_seidel(A, c, 0.1))
 

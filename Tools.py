@@ -131,7 +131,6 @@ def newton(f, g, coor0, epsilon):
     return cur
 
 
-
 def row_reduction(A, c):
     # add pivoting!!!
     """ takes a nXn matrix and a vector c and returns the solutions in order"""
@@ -150,7 +149,7 @@ def row_reduction(A, c):
         for row in range(pivot - 1, -1, -1):
             d = matrix[row, pivot]
             matrix[row] = [elem - piv * d for elem, piv in zip(matrix[row], matrix[pivot])]
-    return [r[-1] for r in matrix]
+    return np.array([r[-1] for r in matrix], dtype=float)
 
 
 def crout(A):
@@ -188,7 +187,7 @@ def down(L, c):
 def up(U, y):
     x = np.zeros(len(y), dtype=float)
     n = len(y)
-    for i in range(n -1, -1, -1):
+    for i in range(n - 1, -1, -1):
         s = 0
         for j in range(i+1, n):
             s += U[i, j] * x[j]
@@ -201,3 +200,23 @@ def LU_decomposition(A, c):
     y = down(L, c)
     x = up(U, y)
     return x
+
+
+def gauss_seidel(A, c, epsilon):
+    n, m = np.shape(A)
+    if n != m:
+        return "your matrix is not square!"
+    x = np.ones(n, dtype=float)
+    convergence = np.zeros(n, dtype=bool)
+    while not all(convergence):
+        for i in range(n):
+            s = 0
+            for j in range(n):
+                if j != i:
+                    s += A[i, j] * x[j]
+            last = x[i]
+            cur = (c[i] - s) / A[i, i]
+            x[i] = cur
+            convergence[i] = abs(cur - last) <= epsilon
+    return x
+
