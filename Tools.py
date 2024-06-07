@@ -195,10 +195,12 @@ def up(U, y):
     return x
 
 
-def LU_decomposition(A, c):
+def LU_decomposition(A, C):
     L, U = crout(A)
-    y = down(L, c)
-    x = up(U, y)
+    x = []
+    for s in C:
+        y = down(L, s)
+        x.append(up(U, y))
     return x
 
 
