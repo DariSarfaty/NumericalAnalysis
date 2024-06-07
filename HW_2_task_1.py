@@ -23,20 +23,20 @@ c = np.array([[7.9], [-12.5], [18.0], [-8.1]])"""
 ns = []
 ms = []
 elaps = []
-end = []
-start = []
-for test in range(100):
-    n = np.random.randint(2, 10)
-    m = np.random.randint(2, 10)
+for test in range(50):
+    n = np.random.randint(2, 50)
+    m = np.random.randint(2, 50)
     A = np.random.randint(1, 10, (n, n))
     for i in range(n):
         A[i, i] *= 10
-    start.append(time.time())
+    start = np.zeros(m)
+    end = np.zeros(m)
     for rnd in range(m):
         c = np.random.rand(n, 1)
+        start[rnd] = time.time()
         Tools.row_reduction(A, c)
-    end.append(time.time())
-    elaps.append(end[test] - start[test])
+        end[rnd] = time.time()
+    elaps.append(sum(en - st for st, en in zip(start, end)))
     ms.append(m)
     ns.append(n)
 
