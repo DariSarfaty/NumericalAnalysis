@@ -202,33 +202,6 @@ def LU_decomposition(A, c):
     return x
 
 
-def gauss_seidel(A, c, epsilon):
-    ind = 0
-    n, m = np.shape(A)
-    x = np.zeros_like(c, dtype=np.double)
-    if n != m:
-        return "your matrix is not square!"
-    convergence = np.zeros(n, dtype=bool)
-    while ind<5: #not all(convergence):
-        for i in range(n):
-            ind += 1
-            s = 0
-            s = sum(A[i][j] * x[j] for j in range(n) if j != i)
-            """for j in range(n):
-                if j != i:
-                    a = A[i, j]
-                    b = x[j]
-                    print(f"a = {a}, b = {b}")
-                    s += a*b
-                    print(s)"""
-            last = x[i]
-            cur = (c[i] - s) / A[i][i]
-            print(last, cur)
-            x[i] = cur
-            convergence[i] = abs(cur - last) <= epsilon
-    return x
-
-
 def jacobi(A, b, epsilon, iterations):
     n, m = np.shape(A)
     if n != m:
@@ -239,6 +212,23 @@ def jacobi(A, b, epsilon, iterations):
         x_new = np.zeros_like(x)
         for i in range(n):
             s = sum(A[i, j] * x[j] for j in range(n) if j != i)
+            x_new[i] = (b[i] - s) / A[i, i]
+        if all(abs(a - c) < epsilon for a, c in zip(x, x_new)):
+            return x
+        x = x_new
+    return f"could not converge within the allowed iterations, the solutions found: {x}"
+
+
+def gauss_seidel(A, b, epsilon, iterations):
+    n, m = np.shape(A)
+    if n != m:
+        return "matrix must be square"
+    x = np.zeros_like(b)
+
+    for k in range(iterations):
+        x_new = x.copy()
+        for i in range(n):
+            s = sum(A[i, j] * x_new[j] for j in range(n) if j != i)
             x_new[i] = (b[i] - s) / A[i, i]
         if all(abs(a - c) < epsilon for a, c in zip(x, x_new)):
             return x
