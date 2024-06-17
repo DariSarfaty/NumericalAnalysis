@@ -5,7 +5,6 @@ import matplotlib.pyplot as plt
 from matplotlib.ticker import LinearLocator
 
 
-
 fig, ax = plt.subplots(subplot_kw={"projection": "3d"})
 ax.set_xlabel('n')
 ax.set_ylabel('m')
