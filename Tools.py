@@ -138,6 +138,8 @@ def row_reduction(A, c):
     (rows, cols) = np.shape(matrix)
     """reduce down:"""
     for pivot in range(rows):
+        """partial pivoting:"""
+        matrix = pivoting_matrix(matrix, pivot)
         a = matrix[pivot, pivot]
         copy = matrix[pivot].copy()
         matrix[pivot] = [x/a for x in copy]
@@ -195,16 +197,17 @@ def up(U, y):
     return x
 
 
-def LU_decomposition(A, C):
-    L, U = crout(A)
-    x = []
-    for s in C:
-        y = down(L, s)
-        x.append(up(U, y))
+def LU_decomposition(A, c):
+    for row in zip(*c):
+        L, U = crout(A)
+        y = down(L, row)
+        x = up(U, y)
     return x
 
 
-def jacobi(A, b, epsilon, iterations):
+def jacobi(A, b, epsilon=0.000001, iterations=100):
+    """make the matrix diagonally dominant:"""
+    A, b = pivoting_A_b(A, b, 0)
     n, m = np.shape(A)
     if n != m:
         return "matrix must be square"
@@ -221,7 +224,9 @@ def jacobi(A, b, epsilon, iterations):
     return f"could not converge within the allowed iterations, the solutions found: {x}"
 
 
-def gauss_seidel(A, b, epsilon, iterations):
+def gauss_seidel(A, b, epsilon=0.000001, iterations=100):
+    """make the matrix diagonally dominant:"""
+    A, b = pivoting_A_b(A, b, 0)
     n, m = np.shape(A)
     if n != m:
         return "matrix must be square"
@@ -237,3 +242,43 @@ def gauss_seidel(A, b, epsilon, iterations):
         x = x_new
     return f"could not converge within the allowed iterations, the solutions found: {x}"
 
+def pivoting_A_b(A, b, pivot):
+    matrix = np.append(A, b, axis=1)
+    n, m = np.shape(A)
+    for i in range(pivot,n-1):
+        values = matrix[:, i]
+        row = np.argmax(values)
+        matrix[[i,row]] = matrix[[row,i]]
+    return matrix[:, 0:n], matrix[:,n]
+
+def pivoting_matrix(matrix, pivot):
+    n, m = np.shape(matrix)
+    for i in range(pivot,n-1):
+        values = matrix[:, i]
+        row = np.argmax(values)
+        matrix[[i,row]] = matrix[[row,i]]
+    return matrix
+
+
+"""disclaimer: copied from 
+https://stackoverflow.com/questions/37565793/how-to-let-the-user-select-an-input-from-a-finite-list
+ :)"""
+def selectFromDict(options, name):
+    index = 0
+    indexValidList = []
+    print('Select a ' + name + ':')
+    for optionName in options:
+        index = index + 1
+        indexValidList.extend([options[optionName]])
+        print(str(index) + ') ' + optionName)
+    inputValid = False
+    while not inputValid:
+        inputRaw = input(name + ': ')
+        inputNo = int(inputRaw) - 1
+        if inputNo > -1 and inputNo < len(indexValidList):
+            selected = indexValidList[inputNo]
+            inputValid = True
+            break
+        else:
+            print('Please select a valid ' + name + ' number')
+    return selected
