@@ -199,9 +199,8 @@ def up(U, y):
 
 def LU_decomposition(A, c):
     x = []
-    n, m = np.shape(A)
+    L, U = crout(A)
     for row in zip(*c):
-        L, U = crout(A)
         y = down(L, row)
         x.append(up(U, y))
     return x

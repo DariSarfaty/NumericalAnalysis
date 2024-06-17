@@ -12,8 +12,8 @@ ax.set_zlabel('time. \n y = LU decomposition\n b = jacobi\n r = row reduction\n 
 
 
 """test LU decomposition:"""
-ntests = 25
-mtests = 50
+ntests = 40
+mtests = 60
 elaps = np.zeros((ntests,mtests))
 for n in range(2, ntests):
     print(n)
@@ -51,8 +51,8 @@ ax.zaxis.set_major_formatter('{x:.02f}')
 
 
 """test jacobi:"""
-ntests = 25
-mtests = 50
+ntests = 40
+mtests = 60
 elaps = np.zeros((ntests,mtests))
 for n in range(2, ntests):
     print(n)
@@ -91,8 +91,8 @@ ax.zaxis.set_major_formatter('{x:.02f}')
 
 
 """test gauss-seidel:"""
-ntests = 25
-mtests = 50
+ntests = 40
+mtests = 60
 elaps = np.zeros((ntests,mtests))
 for n in range(2, ntests):
     print(n)
@@ -131,8 +131,8 @@ ax.zaxis.set_major_formatter('{x:.02f}')
 
 
 """test row reduction:"""
-ntests = 25
-mtests = 50
+ntests = 40
+mtests = 60
 elaps = np.zeros((ntests,mtests))
 for n in range(2, ntests):
     print(n)
