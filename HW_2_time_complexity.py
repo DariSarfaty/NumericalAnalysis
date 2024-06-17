@@ -2,27 +2,9 @@ import Tools
 import numpy as np
 import time
 import matplotlib.pyplot as plt
-from matplotlib import cm
 from matplotlib.ticker import LinearLocator
 
-"""A = np.array([[3, -3, 2, -4],
-                    [-2, -1, 3, -1],
-                    [5, -2, -3, 2],
-                    [-2, 4, 1, 2]], dtype=float)
 
-c = np.array([[7.9], [-12.5], [18.0], [-8.1]])"""
-
-"""A = np.array([[30, 3, 2, -4],
-                    [-2, -10, 3, -1],
-                    [5, -2, -30, 2],
-                    [-2, 4, 1, 20]], dtype=float)
-
-C = np.array([[30, 3, 2, -4],
-                    [-2, -10, 3, -1],
-                    [5, -2, -30, 2],
-                    [-2, 4, 1, 20]], dtype=float)
-
-c = np.array([[[7.9], [-12.5], [18.0], [-8.1]], [[40], [-12.5], [18.0], [-8.1]]])"""
 
 fig, ax = plt.subplots(subplot_kw={"projection": "3d"})
 ax.set_xlabel('n')
