@@ -198,10 +198,12 @@ def up(U, y):
 
 
 def LU_decomposition(A, c):
+    x = []
+    n, m = np.shape(A)
     for row in zip(*c):
         L, U = crout(A)
         y = down(L, row)
-        x = up(U, y)
+        x.append(up(U, y))
     return x
 
 
@@ -282,3 +284,18 @@ def selectFromDict(options, name):
         else:
             print('Please select a valid ' + name + ' number')
     return selected
+
+def transpose(A):
+    n,m = np.shape(A)
+    transposed = np.zeros((m, n))
+    for i in range(n):
+        for j in range (m):
+            transposed[j, i] = A[i, j]
+    return transposed
+
+def matrix_mult(A,B):
+    result = [[sum(a * b for a, b in zip(A_row, B_col))
+               for B_col in zip(*B)]
+              for A_row in A]
+    return result
+
