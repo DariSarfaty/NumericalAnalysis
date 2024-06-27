@@ -298,3 +298,18 @@ def matrix_mult(A,B):
               for A_row in A]
     return result
 
+
+def lagrange(data):
+    def interpolation(point):
+        P = 0
+        for i in range(len(data)):
+            L = 1
+            xi = data[i, 0]
+            yi = data[i, 1]
+            for j in range(len(data)):
+                if j != i:
+                    xj = data[j, 0]
+                    L *= (point - xj)/(xi - xj)
+            P += L*yi
+        return P
+    return interpolation
