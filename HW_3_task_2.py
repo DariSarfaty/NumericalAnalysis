@@ -34,4 +34,3 @@ y = [func(i) for i in x]
 plt.plot(x, y, "g", lw=1)
 plt.plot(xs, ys, "r.")
 plt.show()
-
