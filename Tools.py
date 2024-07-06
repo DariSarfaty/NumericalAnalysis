@@ -1,4 +1,5 @@
 import numpy as np
+import matplotlib.pyplot as plt
 
 
 def bisection(function, interval, epsilon):
@@ -313,3 +314,47 @@ def lagrange(data):
             P += L*yi
         return P
     return interpolation
+
+
+def cubic_spline(data, res):
+    x = [point[0] for point in data]
+    y = [point[1] for point in data]
+    n = len(x) - 1
+    h = [x[i + 1] - x[i] for i in range(n)]
+
+    alpha = np.zeros(n + 1)
+    for i in range(1, n):
+        alpha[i] = (3 / h[i] * (y[i + 1] - y[i])) - (3 / h[i - 1] * (y[i] - y[i - 1]))
+
+    l = np.ones(n + 1)
+    mu = np.zeros(n + 1)
+    z = np.zeros(n + 1)
+
+    for i in range(1, n):
+        l[i] = 2 * (x[i + 1] - x[i - 1]) - h[i - 1] * mu[i - 1]
+        mu[i] = h[i] / l[i]
+        z[i] = (alpha[i] - h[i - 1] * z[i - 1]) / l[i]
+
+    b = [0] * n
+    c = [0] * (n + 1)
+    d = [0] * n
+    a = y[:-1]
+
+    for j in range(n - 1, -1, -1):
+        c[j] = z[j] - mu[j] * c[j + 1]
+        b[j] = (y[j + 1] - y[j]) / h[j] - h[j] * (c[j + 1] + 2 * c[j]) / 3
+        d[j] = (c[j + 1] - c[j]) / (3 * h[j])
+
+    m = n - 1
+
+    for i in range(n):
+        ys = []
+        myx = np.arange(x[i], x[i+1] + res, res)
+        for s in myx:
+            s = s - x[i]
+            ys.append(a[i] + b[i] * s + c[i] * s ** 2 + d[i] * s ** 3)
+        plt.plot(myx, ys, "b",lw=1)
+
+    plt.plot(x, y, "r.")
+    plt.show()
+    return
