@@ -358,3 +358,17 @@ def cubic_spline(data, res):
     plt.plot(x, y, "r.")
     plt.show()
     return
+
+
+def trap(func, interval, steps):
+    x0 = interval[0]
+    x1 = interval[1]
+    h = abs(x1 - x0)/steps
+    sum = 0
+    for i in range(steps):
+        sum += h*(func(x0 + i*h) + func(x0 + (i+1)*h))/2
+    return sum
+
+
+def richardson(func, interval, min_steps):
+    return 4/3*trap(func,interval,min_steps *2) - trap(func, interval, min_steps)/3
