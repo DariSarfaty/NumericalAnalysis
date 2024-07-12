@@ -363,12 +363,65 @@ def cubic_spline(data, res):
 def trap(func, interval, steps):
     x0 = interval[0]
     x1 = interval[1]
-    h = abs(x1 - x0)/steps
-    sum = 0
-    for i in range(steps):
-        sum += h*(func(x0 + i*h) + func(x0 + (i+1)*h))/2
-    return sum
-
+    h = (x1 - x0)/steps
+    sum = func(x0) + func(x1)
+    for i in range(1, steps):
+        sum += 2*func(x0 + i*h)
+    return sum *h / 2
 
 def richardson(func, interval, min_steps):
     return 4/3*trap(func,interval,min_steps *2) - trap(func, interval, min_steps)/3
+
+
+def simpson13(func, interval, steps):
+    if steps%2 == 0:
+        steps += 1
+    x0 = interval[0]
+    x1 = interval[1]
+    h = (x1 - x0)/steps
+    sum = func(x0) + func(x1)
+    for i in range(1, steps):
+        if i%2 == 0:
+            factor = 4
+        else:
+            factor = 2
+        sum += factor * func(x0 + i*h)
+    result = sum * h / 3
+    return result
+
+
+def romberg_step(array, eval):
+    myarr = [eval]
+    for j in range(len(array)):
+        k = j + 1
+        a = 4**k
+        myarr.append((a * myarr[j] - array[j]) / (a - 1))
+    return myarr
+
+
+def romberg(func, interval, method, epsilon):
+    i = 0
+    arr = []
+    while i <= 1 or abs(arr[-1] - arr[-2]) > epsilon:
+        steps = 2 ** i
+        eval = method(func, interval, steps)
+        arr = romberg_step(arr, eval)
+        i += 1
+    return arr[-1]
+
+
+def quad10(func, interval):
+    X = [-0.14887434, 0.14887434, -0.43339539, 0.43339539, -0.67940957, 0.67940957, -0.86506337, 0.86506337, -0.97390653, 0.97390653]
+    C = [0.29552422, 0.29552422, 0.26926672, 0.26926672, 0.21908636, 0.21908636, 0.14945135, 0.14945135, 0.06667134, 0.06667134]
+    a = interval[0]
+    b = interval[1]
+    A = (b - a) / 2
+    B = (b + a) / 2
+
+    def new_func(x):
+        return A * func(A * x + B)
+
+    sum = 0
+    for x, c in zip(X, C):
+        sum += c * new_func(x)
+    return sum
