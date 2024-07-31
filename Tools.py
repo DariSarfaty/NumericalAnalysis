@@ -425,3 +425,49 @@ def quad10(func, interval):
     for x, c in zip(X, C):
         sum += c * new_func(x)
     return sum
+
+def diff(x0, x1, fx0, fx1):
+    return (fx1 - fx0)/(x1 - x0)
+
+def func_diff(func, x, delta):
+    x0 = x - delta
+    x1 = x + delta
+    fx0 = func(x0)
+    fx1 = func(x1)
+    return diff(x0, x1, fx0, fx1)
+
+def romberg_diff(func, x, epsilon):
+    i = 0
+    arr = []
+    while i <= 1 or abs(arr[-1] - arr[-2]) > epsilon:
+        delta = 1 / (2 ** i)
+        eval = func_diff(func, x, delta)
+        arr = romberg_step(arr, eval)
+        i += 1
+    return arr[-1]
+
+
+def euler(func, x0, y0, x, step):
+    steps = int((x - x0)/step)
+    for i in range(steps):
+        y0 += func(x0, y0) * step
+        x0 += step
+    return y0
+
+
+def RK2(func, x0, y0, x, step):
+    steps = int((x - x0) / step)
+    for i in range(steps):
+        k1 = func(x0, y0)
+        k2 = func(x0 + step, y0 + k1 * step)
+        y0 += 0.5 * step * (k1 + k2)
+        x0 += step
+    return y0
+
+
+
+if __name__ == "__main__":
+    def f(x, y):
+        return 10 - 2*x
+
+    print(RK2(f, 1, 1, 1.1, 2))
