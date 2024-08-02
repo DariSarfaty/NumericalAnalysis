@@ -465,9 +465,42 @@ def RK2(func, x0, y0, x, step):
     return y0
 
 
+def RK4(func, x0, y0, x, step):
+    steps = int((x - x0) / step)
+    for i in range(steps):
+        k1 = func(x0, y0)
+        k2 = func(x0 + 0.5*step, y0 + k1 * 0.5*step)
+        k3 = func(x0 + 0.5*step, y0 + k2 * 0.5*step)
+        k4 = func(x0 + step, y0 + k3 * step)
+        y0 += step * (k1 + 2*k2 + 2*k3 + k4) / 6
+        x0 += step
+    return y0
+
+
+def leapfrog(func, x0, v0, t, step):
+    steps = int(t / step)
+    for i in range(steps):
+        a0 = func(x0)
+        x0 += v0 * step + 0.5 * a0 * step * step
+        a1 = func(x0)
+        v0 += 0.5 * step * (a0 + a1)
+    return x0, v0
+
+
+def euler_2nd(func, x0, y0, v0, x, step):
+    steps = int((x - x0) / step)
+    for i in range(steps):
+        y1 = y0 + step * v0
+        v1 = v0 + step * func(x0, y0, v0)
+        x0 += step
+        y0 = y1
+        v0 = v1
+    return y0, v0
+
+
 
 if __name__ == "__main__":
     def f(x, y):
         return 10 - 2*x
 
-    print(RK2(f, 1, 1, 1.1, 2))
+    print(RK4(f, 1, 1, 3, 0.1))
