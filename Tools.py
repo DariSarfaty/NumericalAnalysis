@@ -487,20 +487,92 @@ def leapfrog(func, x0, v0, t, step):
     return x0, v0
 
 
-def euler_2nd(func, x0, y0, v0, x, step):
+def euler_second(func, x0, y0, v0, x, step):
     steps = int((x - x0) / step)
     for i in range(steps):
-        y1 = y0 + step * v0
-        v1 = v0 + step * func(x0, y0, v0)
-        x0 += step
-        y0 = y1
-        v0 = v1
+        y0 += step * v0
+        v0 += step * func(x0, y0, v0)
+        x0 = x0 + step
     return y0, v0
 
 
+def RK4_second(func, x0, y0, v0, x, step):
+    steps = int((x - x0) / step)
+    for i in range(steps):
+        k1_y = step * v0
+        k1_v = step * func(x0, y0, v0)
+
+        k2_y = step * (v0 + k1_v / 2)
+        k2_v = step * func(x0 + step / 2, y0 + k1_y / 2, v0 + k1_v / 2)
+
+        k3_y = step * (v0 + k2_v / 2)
+        k3_v = step * func(x0 + step / 2, y0 + k2_y / 2, v0 + k2_v / 2)
+
+        k4_y = step * (v0 + k3_v)
+        k4_v = step * func(x0 + step, y0 + k3_y, v0 + k3_v)
+
+        y0 += (k1_y + 2 * k2_y + 2 * k3_y + k4_y) / 6
+        v0 += (k1_v + 2 * k2_v + 2 * k3_v + k4_v) / 6
+        x0 += step
+    return y0, v0
+
+
+def adams(func, f, x0, y0, v0, x_end, step):
+    """func takes x,y
+    f takes x,y,v"""
+    x = [x0]
+    y_predict = [y0]
+    v_predict = [v0]
+
+
+    for i in range(1, 4):
+        y, v = RK4_second(f, x0, y0, v0, x0 + i*step, step)
+        y_predict.append(y)
+        v_predict.append(v)
+        x.append(x0 + i*step)
+    x0 = x0 + 3*step
+    y_correct = y_predict
+    v_correct = v_predict
+    while x0 <= x_end:
+        y_p = y_correct[-1] + (step / 24) * (
+                    55 * v_correct[-1] - 59 * v_correct[-2] + 37 * v_correct[-3] - 9 * v_correct[-4])
+        v_p = v_correct[-1] + (step / 24) * (
+                    55 * f(x[-1], y_correct[-1], v_correct[-1]) - 59 * f(x[-2], y_correct[-2],
+                                                                              v_correct[-2]) + 37 * f(x[-3],
+                                                                                                     y_correct[-3],
+                                                                                                     v_correct[
+                                                                                                         -3]) - 9 * f(
+                x[-4], y_correct[-4], v_correct[-4]))
+        x0 += step
+        y_c = y_correct[-1] + (step/24) * (9*v_p + 19*v_correct[-1] - 5*v_correct[-2] + v_correct[-3])
+        v_c = v_correct[-1] + (step/24) * (9*f(x0, y_p, v_p) + 19*f(x[-1], y_correct[-1], v_correct[-1]) - 5*f(x[-2], y_correct[-2], v_correct[-2]) + f(x[-3], y_correct[-3], v_correct[-3]))
+        x.append(x0)
+        y_correct.append(y_c)
+        v_correct.append(v_c)
+    return y_correct[:-1], v_correct[:-1]
+
+
+def adams_first(func, x0, y0, x_end, step):
+    """func takes x,y
+    f takes x,y,v"""
+    x = [x0]
+    y_predict = [y0]
+
+
+
+    for i in range(1, 4):
+        y = RK4(func, x0, y0, x0 + i*step, step)
+        y_predict.append(y)
+        x.append(x0 + i*step)
+    x0 = x0 + 3*step
+    y_correct = y_predict
+    while x0 <= x_end:
+        y_p = y_correct[-1] + (step/24) * (55*func(x[-1], y_correct[-1]) - 59*func(x[-2], y_correct[-2]) + 37*func(x[-3], y_correct[-3]) - 9*func(x[-4], y_correct[-4]))
+        x0 += step
+        y_c = y_correct[-1] + (step/24) * (9*func(x0, y_p) + 19*func(x[-1], y_correct[-1]) - 5*func(x[-2], y_correct[-2]) + func(x[-3], y_correct[-3]))
+        x.append(x0)
+        y_correct.append(y_c)
+    return y_correct[:-1]
 
 if __name__ == "__main__":
-    def f(x, y):
-        return 10 - 2*x
-
-    print(RK4(f, 1, 1, 3, 0.1))
+    pass
