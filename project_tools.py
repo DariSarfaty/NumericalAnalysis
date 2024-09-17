@@ -52,19 +52,4 @@ def cubic_spline(x, y):
     return a, b, c, d
 
 if __name__ == "__main__":
-
-    res = 0.1
-    x = [0, 1000, 2600, 4600, 6000]
-    z = [2600, 4000, 3200, 3600, 2400]
-    a, b, c, d = cubic_spline(x, z)
-    for i in range(len(x)-1):
-        def f(p):
-            return a[i] + b[i]*(p - x[i]) + c[i]*(p - x[i])**2 + d[i]*(p - x[i])**3
-
-
-        xs = np.arange(x[i], x[i + 1] + res, res)
-        zs = [f(point) for point in xs]
-        plt.plot(xs, zs, "b")
-
-    plt.plot(x,z, "r.")
-    plt.show()
+    pass
