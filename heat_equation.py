@@ -75,5 +75,3 @@ anim = FuncAnimation(fig, animate, frames=Nt, interval=50, blit=False, repeat=Fa
 
 plt.show()
 
-# Save the animation
-anim.save('heat_equation_solution.gif', writer='ffmpeg', fps=10)  # Save as MP4 with FFmpeg

@@ -119,7 +119,13 @@ fig, ax = plt.subplots()
 
 # Plot setup
 cax = ax.imshow(u, extent=[0, nx, 0, nz], cmap=plt.cm.bone, origin='lower', animated=True)
-fig.colorbar(cax)
+
+
+colorbar = fig.colorbar(cax)
+colorbar.set_label('Displacement (100m)')  # Add your label here
+
+ax.set_xlabel('x (100m)')
+ax.set_ylabel('z (100m)')
 
 # Plot the spline and source location
 function_plot, = ax.plot(xs, zs, 'g--')  # Plot the boundary in green
@@ -128,12 +134,18 @@ source_plot, = ax.plot(x_source, z_source, 'r.', markersize=10, label='Source') 
 # Invert the z axis
 ax.invert_yaxis()
 
+title = ax.set_title("Time: 0.00 s")
+
 # Update function for animation
 def update(frame):
     global u, u_prev, u_next
 
     # Apply source
     t = frame * dt
+
+    # Update the title with the current time
+    title.set_text(f"Time: {t:.2f} s")
+
     u[z_source, x_source] += source_function(t)
 
     # Finite difference update for the wave equation
@@ -151,10 +163,11 @@ def update(frame):
     # Update the wave field plot
     cax.set_array(u)
 
-    return cax, function_plot, source_plot
+    return cax, function_plot, source_plot, title
 
 # Animation function, where 'interval' is the delay between frames in milliseconds
-ani = FuncAnimation(fig, update, frames=range(nt), blit=True, interval=50, repeat=False)
+ani = FuncAnimation(fig, update, frames=range(nt), blit=False, interval=50, repeat=False)
 
 # Show the animation
 plt.show()
+
