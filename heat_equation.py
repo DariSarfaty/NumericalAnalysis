@@ -9,9 +9,7 @@ dt = 0.1  # Time step size (seconds)
 k = 1.786e-3  # Thermal diffusivity (m^2/s)
 sigmax, sigmay = 0.00625, 0.00625  # Standard Deviations
 Nx, Ny = int(Lx / dx) + 1, int(Ly / dy) + 1  # Number of grid points in x and y directions
-x = np.linspace(0, Lx, Nx)
-y = np.linspace(0, Ly, Ny)
-X, Y = np.meshgrid(x, y)
+
 
 # Time parameters
 t_max = 60  # Maximum time (seconds)
@@ -22,10 +20,13 @@ T = np.full((Ny, Nx), 10.0)  # Initial temperature T(x, y, 0) = 10
 
 # Boundary conditions
 def apply_boundary_conditions(T):
-    T[:, 0] = np.where(y <= 0.8, 100 - 112.5 * y, 10)  # T(0, y, t)
-    T[:, -1] = 100 - 60 * y  # T(1.5, y, t)
-    T[0, :] = 100  # T(x, 0, t)
-    T[-1, :] = 10  # T(x, 1.5, t)
+
+    for i in range(Ny):
+        T[i, 0] = 100 - 112.5 * i * dy
+        T[i, -1] = 100 - 60 * i * dy
+    T[int(0.8 / dy) + 1:, 0] = 10
+    T[0, :] = 100
+    T[-1, :] = 10
 
 apply_boundary_conditions(T)
 
@@ -36,10 +37,12 @@ def heat_source(x, y, t):
 # Animation function
 def update_temperature(T, T_new, t):
     for i in range(1, Ny-1):
+        x = i * dx
         for j in range(1, Nx-1):
+            y = j * dy
             d2T_dx2 = (T[i, j+1] - 2 * T[i, j] + T[i, j-1]) / dx**2
             d2T_dy2 = (T[i+1, j] - 2 * T[i, j] + T[i-1, j]) / dy**2
-            F = heat_source(x[j], y[i], t)
+            F = heat_source(y, x, t)
             T_new[i, j] = T[i, j] + dt * (k * (d2T_dx2 + d2T_dy2) + F)
     apply_boundary_conditions(T_new)
     return T_new
@@ -47,10 +50,16 @@ def update_temperature(T, T_new, t):
 # Create the figure and axis for the animation
 fig, ax = plt.subplots()
 cax = ax.imshow(T, cmap='hot', origin='lower', extent=[0, Lx, 0, Ly], vmin=0, vmax=100)
-fig.colorbar(cax)
+
+# Add colorbar and set the label
+colorbar = fig.colorbar(cax)
+colorbar.set_label('Temperature (°C)')  # Add your label here
+
 ax.set_title('Temperature Distribution')
 ax.set_xlabel('x (m)')
 ax.set_ylabel('y (m)')
+
+
 
 # Update function for FuncAnimation
 def animate(n):
@@ -65,3 +74,6 @@ def animate(n):
 anim = FuncAnimation(fig, animate, frames=Nt, interval=50, blit=False, repeat=False)
 
 plt.show()
+
+# Save the animation
+anim.save('heat_equation_solution.gif', writer='ffmpeg', fps=10)  # Save as MP4 with FFmpeg
